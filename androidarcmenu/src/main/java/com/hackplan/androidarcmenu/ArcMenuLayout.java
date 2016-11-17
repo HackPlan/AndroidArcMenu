@@ -1,6 +1,7 @@
 package com.hackplan.androidarcmenu;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -21,7 +22,7 @@ import com.hackplan.androidarcmenu.ArcMenu.OnClickBtnListener;
  * Created by Dacer on 12/11/2016.
  */
 
-public class ArcMenuLayout extends ViewGroup implements Animator.AnimatorListener{
+public class ArcMenuLayout extends ViewGroup {
     private Point touchPoint = new Point();
     private final Rect mScreenRect = new Rect();
     private Rect tempRect = new Rect();
@@ -99,7 +100,7 @@ public class ArcMenuLayout extends ViewGroup implements Animator.AnimatorListene
                         (int)(yEnd + child.getMeasuredHeight()/2));
             }
         }
-        AnimatorUtils.showMenu(this, touchPoint, this);
+        AnimatorUtils.showMenu(this, touchPoint, animListener);
     }
 
     private int lastFocusIndex = -1;
@@ -113,8 +114,8 @@ public class ArcMenuLayout extends ViewGroup implements Animator.AnimatorListene
             case MotionEvent.ACTION_CANCEL:
                 if (!show) break;
                 if (lastFocusIndex != -1) {
-                    AnimatorUtils.openMenu(this, lastFocusIndex);
                     show = false;
+                    AnimatorUtils.openMenu(this, lastFocusIndex, animListener);
                     if (onClickBtnListener != null) {
                         View clickedView = getChildAt(lastFocusIndex);
                         onClickBtnListener.onClickArcMenu(clickedView, (int)clickedView.getTag());
@@ -170,23 +171,24 @@ public class ArcMenuLayout extends ViewGroup implements Animator.AnimatorListene
     }
 
     private boolean animFinished = true;
-    @Override
-    public void onAnimationStart(Animator animation) {
-        animFinished = false;
-    }
 
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        animFinished = true;
-    }
+    private AnimatorListenerAdapter animListener = new AnimatorListenerAdapter() {
 
-    @Override
-    public void onAnimationCancel(Animator animation) {
-        animFinished = true;
-    }
+        @Override
+        public void onAnimationStart(Animator animation) {
+            animFinished = false;
+        }
 
-    @Override
-    public void onAnimationRepeat(Animator animation) {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            animFinished = true;
+            if (!show) removeAllViews();
+        }
 
-    }
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            animFinished = true;
+        }
+    };
+
 }

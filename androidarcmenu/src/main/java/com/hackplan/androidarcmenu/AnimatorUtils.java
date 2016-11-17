@@ -67,7 +67,7 @@ class AnimatorUtils {
         animSet.start();
     }
 
-    static void showMenu(ViewGroup viewGroup, Point touchPoint, Animator.AnimatorListener listener) {
+    static void showMenu(ViewGroup viewGroup, Point touchPoint, AnimatorListenerAdapter listener) {
         List<Animator> animList = new ArrayList<>();
 
         for (int i = 0, len = viewGroup.getChildCount(); i < len; i++) {
@@ -101,7 +101,7 @@ class AnimatorUtils {
         });
         animSet.start();
     }
-    static void openMenu(ViewGroup viewGroup, int openIndex) {
+    static void openMenu(ViewGroup viewGroup, int openIndex, AnimatorListenerAdapter endListener) {
         List<Animator> animList = new ArrayList<>();
 
         for (int i = viewGroup.getChildCount() - 1; i >= 0; i--) {
@@ -115,12 +115,7 @@ class AnimatorUtils {
         animSet.setDuration(ANIM_DURATION);
         animSet.setInterpolator(new AnticipateInterpolator());
         animSet.playTogether(animList);
-        animSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-            }
-        });
+        animSet.addListener(endListener);
         animSet.start();
     }
 
