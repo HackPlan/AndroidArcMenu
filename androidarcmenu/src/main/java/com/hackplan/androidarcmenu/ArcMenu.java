@@ -19,7 +19,7 @@ import java.util.HashSet;
 public class ArcMenu {
 
     public interface OnClickBtnListener{
-        void onClickArcMenu(int viewId);
+        void onClickArcMenu(View menuView, int viewId);
     }
 
     private ArcMenuInterceptLayout arcLayout;

@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements ArcMenu.OnClickBt
     }
 
     @Override
-    public void onClickArcMenu(int id) {
+    public void onClickArcMenu(View menuView, int id) {
         Toast.makeText(this, String.format("Click #%s", id), Toast.LENGTH_SHORT).show();
     }
 
