@@ -124,7 +124,9 @@ public class ArcMenuLayout extends ViewGroup implements Animator.AnimatorListene
                 if (lastFocusIndex != -1) {
                     AnimatorUtils.openMenu(this, lastFocusIndex);
                     show = false;
-                    if (onClickBtnListener != null) onClickBtnListener.onClickArcMenu(lastFocusIndex);
+                    if (onClickBtnListener != null) {
+                        onClickBtnListener.onClickArcMenu((int)getChildAt(lastFocusIndex).getTag());
+                    }
                 } else if (hideOnTouchUp) {
                     AnimatorUtils.hideMenu(this, touchPoint);
                     show = false;
