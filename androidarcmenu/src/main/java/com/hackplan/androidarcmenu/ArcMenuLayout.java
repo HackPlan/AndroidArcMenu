@@ -3,8 +3,6 @@ package com.hackplan.androidarcmenu;
 import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.v4.view.MotionEventCompat;
@@ -24,7 +22,6 @@ import com.hackplan.androidarcmenu.ArcMenu.OnClickBtnListener;
  */
 
 public class ArcMenuLayout extends ViewGroup implements Animator.AnimatorListener{
-    private Paint paint;
     private Point touchPoint = new Point();
     private final Rect mScreenRect = new Rect();
     private Rect tempRect = new Rect();
@@ -42,12 +39,6 @@ public class ArcMenuLayout extends ViewGroup implements Animator.AnimatorListene
 
     public ArcMenuLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.BLUE);
     }
 
     public boolean isShow() {
