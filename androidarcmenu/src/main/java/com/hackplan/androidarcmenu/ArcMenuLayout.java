@@ -110,6 +110,9 @@ public class ArcMenuLayout extends ViewGroup {
         float y = MotionEventCompat.getY(event, 0);
 
         switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                hideOnTouchUp = true;
+                break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (!show) break;
