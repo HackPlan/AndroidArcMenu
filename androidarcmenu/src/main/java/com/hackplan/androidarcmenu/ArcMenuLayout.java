@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
@@ -17,6 +18,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.hackplan.androidarcmenu.ArcMenu.OnClickMenuListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dacer on 12/11/2016.
@@ -47,31 +51,36 @@ public class ArcMenuLayout extends ViewGroup {
         return show;
     }
 
-    private float xFirst, yFirst, xEnd, yEnd;
-    private int radius = (int)dpToPx(80f);
-    private double radAlpha = Math.toRadians(90d);
+    private ArrayList<PointF> menuPoints = new ArrayList<>();
+    private int radius = (int) dpToPx(80f);
+    private double arcRadians = Math.toRadians(90d);
+
     public void show(ArcMenu arcMenu, int x, int y, boolean hideOnTouchUp) {
+        if (getChildCount() <= 0) return;
         this.hideOnTouchUp = hideOnTouchUp;
         this.arcMenu = arcMenu;
         show = true;
+        if (x == mScreenRect.centerX() && y == mScreenRect.centerY()) y += 1;
+
         touchPoint.set(x, y);
-        double radO = Math.PI - radAlpha/2 -
-                Math.atan((touchPoint.x - mScreenRect.centerX()) / (touchPoint.y - mScreenRect.centerY()));
-        double rad2 = Math.atan((touchPoint.x - mScreenRect.centerX()) / (touchPoint.y - mScreenRect.centerY())) - radAlpha/2;
-        xFirst = touchPoint.x - ((float) (radius * Math.sin(radO)));
-        yFirst = touchPoint.y + ((float) (Math.cos(radO) * radius));
-        xEnd = touchPoint.x - ((float) (radius * Math.sin(rad2)));
-        yEnd = touchPoint.y - ((float) (Math.cos(rad2) * radius));
+        menuPoints.clear();
+        double alpha = Math.atan((double) (y - mScreenRect.centerY()) / (x - mScreenRect.centerX()));
+        if (x < mScreenRect.centerX()) alpha += Math.PI;
+        for (int i=0; i<getChildCount(); i++) {
+            double b;
+            if (getChildCount() == 1) {
+                b = arcRadians / 2;
+            }else {
+                b = i * (1D / (getChildCount() - 1)) * arcRadians;
+            }
+            menuPoints.add(PointUtils.getPoint(new PointF(x, y), radius,
+                    Math.PI + alpha - arcRadians / 2 + b));
+        }
         requestLayout();
     }
-    
+
     public void setOnClickMenuListener(OnClickMenuListener onClickMenuListener) {
         this.onClickMenuListener = onClickMenuListener;
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
     }
 
     @Override
@@ -84,34 +93,27 @@ public class ArcMenuLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (!show) return ;
+        if (!show) return;
         int childCount = this.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View child = this.getChildAt(i);
             child.setAlpha(0L);
-            if (i == 0) {
-                child.layout((int)xFirst - child.getMeasuredWidth()/2,
-                        (int)yFirst - child.getMeasuredHeight()/2,
-                        (int)xFirst + child.getMeasuredWidth()/2,
-                        (int)yFirst + child.getMeasuredHeight()/2);
-            } else {
-
-                child.layout((int)xEnd - child.getMeasuredWidth()/2,
-                        (int)yEnd - child.getMeasuredHeight()/2,
-                        (int)(xEnd + child.getMeasuredWidth()/2),
-                        (int)(yEnd + child.getMeasuredHeight()/2));
-            }
+            child.layout((int) (menuPoints.get(i).x - child.getMeasuredWidth() / 2),
+                    (int) (menuPoints.get(i).y - child.getMeasuredHeight() / 2),
+                    (int) (menuPoints.get(i).x + child.getMeasuredWidth() / 2),
+                    (int) (menuPoints.get(i).y + child.getMeasuredHeight() / 2));
         }
         AnimatorUtils.showMenu(this, touchPoint, animListener);
     }
 
     private int lastFocusIndex = -1;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = MotionEventCompat.getX(event, 0);
         float y = MotionEventCompat.getY(event, 0);
 
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 hideOnTouchUp = true;
                 break;
@@ -123,12 +125,12 @@ public class ArcMenuLayout extends ViewGroup {
                     AnimatorUtils.openMenu(this, lastFocusIndex, animListener);
                     if (onClickMenuListener != null) {
                         View clickedView = getChildAt(lastFocusIndex);
-                        onClickMenuListener.onClickArcMenu(arcMenu, (int)clickedView.getTag());
+                        onClickMenuListener.onClickArcMenu(arcMenu, (int) clickedView.getTag());
                     }
                 } else if (hideOnTouchUp) {
                     AnimatorUtils.hideMenu(this, touchPoint);
                     show = false;
-                }else {
+                } else {
                     hideOnTouchUp = true;
                 }
                 lastFocusIndex = -1;
@@ -137,12 +139,13 @@ public class ArcMenuLayout extends ViewGroup {
                 if (!animFinished) break;
                 tempRect = new Rect();
                 boolean isOverMenu = false;
-                for (int i=0; i<getChildCount(); i++) {
+                for (int i = 0; i < getChildCount(); i++) {
                     getChildAt(i).getGlobalVisibleRect(tempRect);
-                    if (tempRect.contains((int)x, (int)y)) {
+                    if (tempRect.contains((int) x, (int) y)) {
                         isOverMenu = true;
                         if (lastFocusIndex == i) break;
-                        if (lastFocusIndex != -1) AnimatorUtils.clearFocusChild(this, lastFocusIndex);
+                        if (lastFocusIndex != -1)
+                            AnimatorUtils.clearFocusChild(this, lastFocusIndex);
                         AnimatorUtils.focusChild(this, i);
                         lastFocusIndex = i;
                         break;
@@ -163,9 +166,9 @@ public class ArcMenuLayout extends ViewGroup {
         int w = resolveSizeAndState(0, widthMeasureSpec, 1);
         int h = resolveSizeAndState(0, heightMeasureSpec, 0);
         int childCount = getChildCount();
-        for(int i = 0 ; i < childCount ; i ++){
+        for (int i = 0; i < childCount; i++) {
             View children = getChildAt(i);
-            measureChild(children,widthMeasureSpec,heightMeasureSpec);
+            measureChild(children, widthMeasureSpec, heightMeasureSpec);
         }
         setMeasuredDimension(w, h);
     }
