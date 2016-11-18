@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
-import com.hackplan.androidarcmenu.ArcMenu.OnClickBtnListener;
+import com.hackplan.androidarcmenu.ArcMenu.OnClickMenuListener;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class ArcMenuInterceptLayout extends FrameLayout {
         childViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
-    public void show(int x, int y, ArrayList<ArcButton.Builder> btnList, boolean hideOnTouchUp) {
+    public void show(ArcMenu arcMenu, int x, int y, ArrayList<ArcButton.Builder> btnList, boolean hideOnTouchUp) {
         if (indexOfChild(arcMenuLayout) == -1) {
             addView(arcMenuLayout);
         }
@@ -43,12 +43,12 @@ public class ArcMenuInterceptLayout extends FrameLayout {
         for (ArcButton.Builder builder : btnList) {
             arcMenuLayout.addView(builder.getButton(getContext()), childViewParams);
         }
-        arcMenuLayout.show(x, y, hideOnTouchUp);
+        arcMenuLayout.show(arcMenu, x, y, hideOnTouchUp);
 
     }
 
-    public void setOnClickBtnListener(OnClickBtnListener onClickBtnListener) {
-        arcMenuLayout.setOnClickBtnListener(onClickBtnListener);
+    public void setOnClickBtnListener(OnClickMenuListener onClickMenuListener) {
+        arcMenuLayout.setOnClickMenuListener(onClickMenuListener);
     }
 
     @Override

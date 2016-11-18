@@ -3,6 +3,7 @@ package com.hackplan.androidarcmenu;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.support.annotation.DrawableRes;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,32 +19,35 @@ import java.util.HashSet;
 
 public class ArcMenu {
 
-    public interface OnClickBtnListener{
-        void onClickArcMenu(View menuView, int viewId);
+    public interface OnClickMenuListener {
+        void onClickArcMenu(ArcMenu arcMenu, int clickedMenuId);
     }
 
-    private ArcMenuInterceptLayout arcLayout;
-    private ArrayList<ArcButton.Builder> btnList;
-    private boolean hideOnTouchUp;
+    private Builder builder;
 
-    private ArcMenu(ArcMenuInterceptLayout arcLayout, ArrayList<ArcButton.Builder> btnList,
-                    OnClickBtnListener listener, boolean hideOnTouchUp) {
-        this.arcLayout = arcLayout;
-        this.btnList = btnList;
-        this.hideOnTouchUp = hideOnTouchUp;
-        arcLayout.setOnClickBtnListener(listener);
+    private ArcMenu(Builder builder) {
+        this.builder = builder;
     }
 
     public void showOn(View view) {
         if (view == null) return;
         Rect rect = new Rect();
         view.getGlobalVisibleRect(rect);
-        arcLayout.show(rect.centerX(), rect.centerY(), btnList, hideOnTouchUp);
+        builder.arcMenuLayout.show(this, rect.centerX(),
+                rect.centerY(),
+                builder.btnList,
+                builder.hideOnTouchUp);
     }
 
-    public static class Builder implements View.OnTouchListener, View.OnLongClickListener{
+    public int getId() {
+        return builder.id;
+    }
+
+    public static class Builder{
+        private int id = -1;
+        private ArcMenu arcMenu;
         private ArrayList<ArcButton.Builder> btnList = new ArrayList<>();
-        private OnClickBtnListener onClickBtnListener;
+        private OnClickMenuListener onClickMenuListener;
         private Activity activity;
         private ArcMenuInterceptLayout arcMenuLayout;
         private HashSet<View> onTouchViews = new HashSet<>();
@@ -55,12 +59,20 @@ public class ArcMenu {
         }
 
         public ArcMenu build() {
+            if (arcMenu != null) throw new RuntimeException("ArcMenu.Build already built");
             arcMenuLayout = attachToActivity(activity);
-            return new ArcMenu(arcMenuLayout, btnList, onClickBtnListener, hideOnTouchUp);
+            arcMenuLayout.setOnClickBtnListener(onClickMenuListener);
+            arcMenu = new ArcMenu(this);
+            return arcMenu;
         }
 
-        public Builder setListener(OnClickBtnListener listener) {
-            this.onClickBtnListener = listener;
+        public Builder setId(int id){
+            this.id = id;
+            return this;
+        }
+
+        public Builder setListener(OnClickMenuListener listener) {
+            this.onClickMenuListener = listener;
             return this;
         }
 
@@ -76,13 +88,13 @@ public class ArcMenu {
 
         public Builder showOnTouch(View view) {
             onTouchViews.add(view);
-            view.setOnTouchListener(this);
+            view.setOnTouchListener(touchListener);
             return this;
         }
 
         public Builder showOnLongClick(View view) {
-            view.setOnTouchListener(this);
-            view.setOnLongClickListener(this);
+            view.setOnTouchListener(touchListener);
+            view.setOnLongClickListener(longClickListener);
             return this;
         }
 
@@ -91,27 +103,34 @@ public class ArcMenu {
             return this;
         }
 
-        @Override
-        public boolean onLongClick(View v) {
-            arcMenuLayout.show(lastTouchX, lastTouchY, btnList, hideOnTouchUp);
-            return true;
-        }
+
+        private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                arcMenuLayout.show(arcMenu, lastTouchX, lastTouchY, btnList, hideOnTouchUp);
+                return true;
+            }
+        };
 
         private int lastTouchX, lastTouchY;
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN){
-                if (onTouchViews.contains(v)) {
-                    arcMenuLayout.show((int) event.getRawX(), (int) event.getRawY(),
-                            btnList, hideOnTouchUp);
-                }else {
-                    //Used in onLongClick(View v)
-                    lastTouchX = (int) event.getRawX();
-                    lastTouchY = (int) event.getRawY();
+        private View.OnTouchListener touchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    if (onTouchViews.contains(v)) {
+                        arcMenuLayout.show(arcMenu,
+                                (int) event.getRawX(),
+                                (int) event.getRawY(),
+                                btnList, hideOnTouchUp);
+                    }else {
+                        //Used in onLongClick(View v)
+                        lastTouchX = (int) event.getRawX();
+                        lastTouchY = (int) event.getRawY();
+                    }
                 }
+                return false;
             }
-            return false;
-        }
+        };
 
         ArcMenuInterceptLayout attachToActivity(Activity activity) {
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();

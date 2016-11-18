@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.hackplan.androidarcmenu.ArcMenu.OnClickBtnListener;
+import com.hackplan.androidarcmenu.ArcMenu.OnClickMenuListener;
 
 /**
  * Created by Dacer on 12/11/2016.
@@ -26,7 +26,8 @@ public class ArcMenuLayout extends ViewGroup {
     private Point touchPoint = new Point();
     private final Rect mScreenRect = new Rect();
     private Rect tempRect = new Rect();
-    private OnClickBtnListener onClickBtnListener;
+    private ArcMenu arcMenu;
+    private OnClickMenuListener onClickMenuListener;
     private boolean show = false;
     private boolean hideOnTouchUp = true;
 
@@ -49,8 +50,9 @@ public class ArcMenuLayout extends ViewGroup {
     private float xFirst, yFirst, xEnd, yEnd;
     private int radius = (int)dpToPx(80f);
     private double radAlpha = Math.toRadians(90d);
-    public void show(int x, int y, boolean hideOnTouchUp) {
+    public void show(ArcMenu arcMenu, int x, int y, boolean hideOnTouchUp) {
         this.hideOnTouchUp = hideOnTouchUp;
+        this.arcMenu = arcMenu;
         show = true;
         touchPoint.set(x, y);
         double radO = Math.PI - radAlpha/2 -
@@ -63,8 +65,8 @@ public class ArcMenuLayout extends ViewGroup {
         requestLayout();
     }
     
-    public void setOnClickBtnListener(OnClickBtnListener onClickBtnListener) {
-        this.onClickBtnListener = onClickBtnListener;
+    public void setOnClickMenuListener(OnClickMenuListener onClickMenuListener) {
+        this.onClickMenuListener = onClickMenuListener;
     }
 
     @Override
@@ -119,9 +121,9 @@ public class ArcMenuLayout extends ViewGroup {
                 if (lastFocusIndex != -1) {
                     show = false;
                     AnimatorUtils.openMenu(this, lastFocusIndex, animListener);
-                    if (onClickBtnListener != null) {
+                    if (onClickMenuListener != null) {
                         View clickedView = getChildAt(lastFocusIndex);
-                        onClickBtnListener.onClickArcMenu(clickedView, (int)clickedView.getTag());
+                        onClickMenuListener.onClickArcMenu(arcMenu, (int)clickedView.getTag());
                     }
                 } else if (hideOnTouchUp) {
                     AnimatorUtils.hideMenu(this, touchPoint);
