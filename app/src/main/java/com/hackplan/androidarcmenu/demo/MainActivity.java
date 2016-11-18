@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity implements ArcMenu.OnClickBt
         final Button btn1 = (Button) findViewById(R.id.btn1);
         final Button btn2 = (Button) findViewById(R.id.btn2);
         final Button btn3 = (Button) findViewById(R.id.btn3);
+        final Button btn4 = (Button) findViewById(R.id.btn4);
+
         Button menuBtn = new Button(this);
         menuBtn.setText("TEST");
         arcMenu = new ArcMenu.Builder(MainActivity.this)
@@ -38,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements ArcMenu.OnClickBt
                 .build();
 
         btn3.setOnLongClickListener(this);
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                arcMenu.showOn(v);
+            }
+        });
     }
 
     @Override

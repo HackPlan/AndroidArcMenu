@@ -31,4 +31,12 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="btn3"/>
+
+    <Button
+        android:id="@+id/btn4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn3"
+        android:layout_marginBottom="20dp"
+        android:text="btn4"/>
 </RelativeLayout>
