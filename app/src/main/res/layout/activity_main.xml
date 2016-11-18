@@ -14,7 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:text="btn1"/>
+        android:text="HOLD(btn1)"/>
 
     <Button
         android:id="@+id/btn2"
@@ -23,27 +23,27 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="btn2"/>
+        android:text="TOUCH(btn2)"/>
 
     <Button
         android:id="@+id/btn3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="btn3"/>
+        android:layout_alignParentTop="true"
+        android:text="ANOTHER HOLD(btn3)"/>
 
     <Button
         android:id="@+id/btn4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn3"
+        android:layout_above="@+id/btn1"
         android:layout_marginBottom="20dp"
-        android:text="btn4"/>
+        android:text="CLICK(btn4)"/>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
-        android:layout_below="@+id/btn3"
+        android:layout_below="@+id/btn2"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

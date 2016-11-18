@@ -3,7 +3,6 @@ package com.hackplan.androidarcmenu;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.support.annotation.DrawableRes;
-import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +32,7 @@ public class ArcMenu {
         if (view == null) return;
         Rect rect = new Rect();
         view.getGlobalVisibleRect(rect);
-        builder.arcMenuLayout.show(this, rect.centerX(),
-                rect.centerY(),
-                builder.btnList,
-                builder.hideOnTouchUp);
+        builder.show(rect.centerX(), rect.centerY());
     }
 
     public int getId() {
@@ -49,25 +45,38 @@ public class ArcMenu {
         private ArrayList<ArcButton.Builder> btnList = new ArrayList<>();
         private OnClickMenuListener onClickMenuListener;
         private Activity activity;
-        private ArcMenuInterceptLayout arcMenuLayout;
+        private ArcMenuInterceptLayout arcMenuInterceptLayout;
         private HashSet<View> onTouchViews = new HashSet<>();
         private boolean hideOnTouchUp = true;
+        private int radius;
+        private double degree = 90;
 
 
         public Builder(Activity activity) {
             this.activity = activity;
+            radius = activity.getResources().getDimensionPixelSize(R.dimen.default_radius);
         }
 
         public ArcMenu build() {
             if (arcMenu != null) throw new RuntimeException("ArcMenu.Build already built");
-            arcMenuLayout = attachToActivity(activity);
-            arcMenuLayout.setOnClickBtnListener(onClickMenuListener);
+            arcMenuInterceptLayout = attachToActivity(activity);
+            arcMenuInterceptLayout.setOnClickBtnListener(onClickMenuListener);
             arcMenu = new ArcMenu(this);
             return arcMenu;
         }
 
         public Builder setId(int id){
             this.id = id;
+            return this;
+        }
+
+        public Builder setRadius(int radius) {
+            this.radius = radius;
+            return this;
+        }
+
+        public Builder setDegree(double degree) {
+            this.degree = degree;
             return this;
         }
 
@@ -103,11 +112,15 @@ public class ArcMenu {
             return this;
         }
 
+        private void show(int x, int y) {
+            arcMenuInterceptLayout.show(arcMenu, x, y,
+                    btnList, hideOnTouchUp, radius, degree);
+        }
 
         private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                arcMenuLayout.show(arcMenu, lastTouchX, lastTouchY, btnList, hideOnTouchUp);
+                show(lastTouchX, lastTouchY);
                 return true;
             }
         };
@@ -118,10 +131,7 @@ public class ArcMenu {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN){
                     if (onTouchViews.contains(v)) {
-                        arcMenuLayout.show(arcMenu,
-                                (int) event.getRawX(),
-                                (int) event.getRawY(),
-                                btnList, hideOnTouchUp);
+                        show((int) event.getRawX(), (int) event.getRawY());
                     }else {
                         //Used in onLongClick(View v)
                         lastTouchX = (int) event.getRawX();

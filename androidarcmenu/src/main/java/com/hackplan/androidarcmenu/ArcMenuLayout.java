@@ -52,11 +52,11 @@ public class ArcMenuLayout extends ViewGroup {
     }
 
     private ArrayList<PointF> menuPoints = new ArrayList<>();
-    private int radius = (int) dpToPx(80f);
-    private double arcRadians = Math.toRadians(90d);
 
-    public void show(ArcMenu arcMenu, int x, int y, boolean hideOnTouchUp) {
+    public void show(ArcMenu arcMenu, int x, int y, boolean hideOnTouchUp,
+                     int radius, double degree) {
         if (getChildCount() <= 0) return;
+        double arcRadians = Math.toRadians(degree);
         this.hideOnTouchUp = hideOnTouchUp;
         this.arcMenu = arcMenu;
         show = true;
@@ -171,11 +171,6 @@ public class ArcMenuLayout extends ViewGroup {
             measureChild(children, widthMeasureSpec, heightMeasureSpec);
         }
         setMeasuredDimension(w, h);
-    }
-
-    public float dpToPx(float dipValue) {
-        DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 
     private boolean animFinished = true;

@@ -35,7 +35,8 @@ public class ArcMenuInterceptLayout extends FrameLayout {
         childViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
-    public void show(ArcMenu arcMenu, int x, int y, ArrayList<ArcButton.Builder> btnList, boolean hideOnTouchUp) {
+    public void show(ArcMenu arcMenu, int x, int y, ArrayList<ArcButton.Builder> btnList,
+                     boolean hideOnTouchUp, int radius, double degree) {
         if (indexOfChild(arcMenuLayout) == -1) {
             addView(arcMenuLayout);
         }
@@ -43,7 +44,7 @@ public class ArcMenuInterceptLayout extends FrameLayout {
         for (ArcButton.Builder builder : btnList) {
             arcMenuLayout.addView(builder.getButton(getContext()), childViewParams);
         }
-        arcMenuLayout.show(arcMenu, x, y, hideOnTouchUp);
+        arcMenuLayout.show(arcMenu, x, y, hideOnTouchUp, radius, degree);
 
     }
 

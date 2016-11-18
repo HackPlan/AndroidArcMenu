@@ -41,10 +41,15 @@ public class MainActivity extends AppCompatActivity implements ArcMenu.OnClickMe
         arcMenu2 = new ArcMenu.Builder(MainActivity.this)
                 .setId(ARC_MENU_ID_2)
                 .addBtn(R.drawable.w, 6)
+                .addBtn(R.drawable.w, 6)
+                .addBtn(R.drawable.w, 6)
+                .addBtn(R.drawable.w, 6)
                 .addBtns(new ArcButton.Builder(menuBtn, 2))
                 .setListener(MainActivity.this)
                 .showOnTouch(btn2)
                 .hideOnTouchUp(true)
+                .setDegree(160)
+                .setRadius(222)
                 .build();
 
         btn3.setOnLongClickListener(this);
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements ArcMenu.OnClickMe
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        MyAdapter mAdapter = new MyAdapter(new String[]{"Pomotodo", "hackplan", "http://one.hackplan.com/", "Dacer"}, this, this);
+        MyAdapter mAdapter = new MyAdapter(new String[]{"HACKPLAN", "Pomotodo", "http://one.hackplan.com/", "Dacer"}, this, this);
         mRecyclerView.setAdapter(mAdapter);
 
     }
