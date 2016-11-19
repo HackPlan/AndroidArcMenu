@@ -1,5 +1,29 @@
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'AndroidArcMenu'
+
+    publishedGroupId = 'com.hackplan'
+    libraryName = 'AndroidArcMenu'
+    artifact = 'AndroidArcMenu'
+
+    libraryDescription = 'An easy-to-use arc Menu library for Android.'
+
+    siteUrl = '//github.com/HackPlan/AndroidArcMenu'
+    gitUrl = '//github.com/HackPlan/AndroidArcMenu'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'Dacer'
+    developerName = 'Ding Wenhao'
+    developerEmail = 'dacerfeedback@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -25,3 +49,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.0.0'
     compile 'com.jakewharton.timber:timber:4.3.1'
 }
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
