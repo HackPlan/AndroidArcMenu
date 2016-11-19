@@ -1,5 +1,6 @@
 package com.hackplan.androidarcmenu.demo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.hackplan.androidarcmenu.ArcButton;
 import com.hackplan.androidarcmenu.ArcMenu;
+import com.hackplan.androidarcmenu.SimpleCirView;
 
 public class MainActivity extends AppCompatActivity implements ArcMenu.OnClickMenuListener,
         View.OnLongClickListener{
@@ -43,8 +45,12 @@ public class MainActivity extends AppCompatActivity implements ArcMenu.OnClickMe
                 .addBtn(R.drawable.w, 6)
                 .addBtn(R.drawable.w, 6)
                 .addBtn(R.drawable.w, 6)
-                .addBtn(R.drawable.w, 6)
-                .addBtns(new ArcButton.Builder(menuBtn, 2))
+                .addBtns(new ArcButton.Builder(menuBtn, 2),
+                        new ArcButton.Builder(new SimpleCirView(this)
+                                .setText("2")
+                                .setCirColor(Color.parseColor("#03A9F4"))
+                                .setTextColor(Color.WHITE),
+                                3))
                 .setListener(MainActivity.this)
                 .showOnTouch(btn2)
                 .hideOnTouchUp(true)

@@ -1,3 +1,4 @@
 <resources>
     <dimen name="default_radius">80dp</dimen>
+    <dimen name="default_simple_cir_view_radius">22dp</dimen>
 </resources>
