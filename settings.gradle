@@ -1,1 +1,1 @@
-include ':app', ':androidarcmenu'
+include ':app', ':library'

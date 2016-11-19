@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidArcMenu.iml" filepath="$PROJECT_DIR$/AndroidArcMenu.iml" />
-      <module fileurl="file://$PROJECT_DIR$/androidarcmenu/androidarcmenu.iml" filepath="$PROJECT_DIR$/androidarcmenu/androidarcmenu.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>
 </project>
