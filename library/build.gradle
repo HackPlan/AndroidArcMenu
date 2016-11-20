@@ -4,9 +4,9 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'AndroidArcMenu'
 
-    publishedGroupId = 'com.hackplan'
+    publishedGroupId = 'com.hackplan.androidarcmenu'
     libraryName = 'AndroidArcMenu'
-    artifact = 'AndroidArcMenu'
+    artifact = 'library'
 
     libraryDescription = 'An easy-to-use arc Menu library for Android.'
 
