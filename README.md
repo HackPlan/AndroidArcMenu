@@ -21,7 +21,7 @@ repositories {
 ```
 
 ```groovy
-compile 'com.hackplan.androidarcmenu:library:1.0.0'
+compile 'com.hackplan.androidarcmenu:library:1.0.1'
 ```
 
 # Usage
