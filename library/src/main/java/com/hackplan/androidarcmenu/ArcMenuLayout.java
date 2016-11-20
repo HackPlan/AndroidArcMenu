@@ -34,6 +34,7 @@ public class ArcMenuLayout extends ViewGroup {
     private OnClickMenuListener onClickMenuListener;
     private boolean show = false;
     private boolean hideOnTouchUp = true;
+    private View viewForListener;
 
     public ArcMenuLayout(Context context) {
         this(context, null);
@@ -53,12 +54,13 @@ public class ArcMenuLayout extends ViewGroup {
 
     private ArrayList<PointF> menuPoints = new ArrayList<>();
 
-    public void show(ArcMenu arcMenu, int x, int y, boolean hideOnTouchUp,
+    public void show(ArcMenu arcMenu, View v, int x, int y, boolean hideOnTouchUp,
                      int radius, double degree) {
         if (getChildCount() <= 0) return;
         double arcRadians = Math.toRadians(degree);
         this.hideOnTouchUp = hideOnTouchUp;
         this.arcMenu = arcMenu;
+        this.viewForListener = v;
         show = true;
         if (x == mScreenRect.centerX() && y == mScreenRect.centerY()) y += 1;
 
@@ -125,7 +127,7 @@ public class ArcMenuLayout extends ViewGroup {
                     AnimatorUtils.openMenu(this, lastFocusIndex, animListener);
                     if (onClickMenuListener != null) {
                         View clickedView = getChildAt(lastFocusIndex);
-                        onClickMenuListener.onClickArcMenu(arcMenu, (int) clickedView.getTag());
+                        onClickMenuListener.onClickArcMenu(arcMenu, viewForListener, (int) clickedView.getTag());
                     }
                 } else if (hideOnTouchUp) {
                     AnimatorUtils.hideMenu(this, touchPoint);

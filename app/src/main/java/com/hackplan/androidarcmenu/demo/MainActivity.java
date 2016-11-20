@@ -75,8 +75,14 @@ public class MainActivity extends AppCompatActivity implements ArcMenu.OnClickMe
     }
 
     @Override
-    public void onClickArcMenu(ArcMenu arcMenu, int viewId) {
-        Toast.makeText(this, String.format("Click #%s, arcMenu id: %s", viewId, arcMenu.getId()), Toast.LENGTH_SHORT).show();
+    public void onClickArcMenu(ArcMenu arcMenu, View v, int viewId) {
+        boolean isInRecyclerView = v.getTag() != null;
+        if (isInRecyclerView) {
+            Toast.makeText(this, String.format("Click #%s, arcMenu id: %s, RecyclerView pos: %s",
+                    viewId, arcMenu.getId(), (int)v.getTag()), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, String.format("Click #%s, arcMenu id: %s", viewId, arcMenu.getId()), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.HashSet;
 public class ArcMenu {
 
     public interface OnClickMenuListener {
-        void onClickArcMenu(ArcMenu arcMenu, int clickedMenuId);
+        void onClickArcMenu(ArcMenu arcMenu, View v, int clickedMenuId);
     }
 
     private Builder builder;
@@ -32,7 +32,7 @@ public class ArcMenu {
         if (view == null) return;
         Rect rect = new Rect();
         view.getGlobalVisibleRect(rect);
-        builder.show(rect.centerX(), rect.centerY());
+        builder.show(view, rect.centerX(), rect.centerY());
     }
 
     public int getId() {
@@ -112,15 +112,15 @@ public class ArcMenu {
             return this;
         }
 
-        private void show(int x, int y) {
-            arcMenuInterceptLayout.show(arcMenu, x, y,
+        private void show(View v, int x, int y) {
+            arcMenuInterceptLayout.show(arcMenu, v, x, y,
                     btnList, hideOnTouchUp, radius, degree);
         }
 
         private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                show(lastTouchX, lastTouchY);
+                show(v, lastTouchX, lastTouchY);
                 return true;
             }
         };
@@ -131,7 +131,7 @@ public class ArcMenu {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN){
                     if (onTouchViews.contains(v)) {
-                        show((int) event.getRawX(), (int) event.getRawY());
+                        show(v, (int) event.getRawX(), (int) event.getRawY());
                     }else {
                         //Used in onLongClick(View v)
                         lastTouchX = (int) event.getRawX();
