@@ -82,6 +82,7 @@ public class ArcMenu {
 
         public Builder setListener(OnClickMenuListener listener) {
             this.onClickMenuListener = listener;
+            if (arcMenuInterceptLayout != null) arcMenuInterceptLayout.setOnClickBtnListener(onClickMenuListener);
             return this;
         }
 
