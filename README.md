@@ -12,7 +12,7 @@ or
 
 [demo.apk](demo_apk)
 
-#Including in Your Project
+# Including in Your Project
 
 ```groovy
 repositories {
@@ -21,7 +21,7 @@ repositories {
 ```
 
 ```groovy
-compile 'com.hackplan.androidarcmenu:library:1.0.1'
+compile 'com.hackplan.androidarcmenu:library:1.1.0'
 ```
 
 # Usage
