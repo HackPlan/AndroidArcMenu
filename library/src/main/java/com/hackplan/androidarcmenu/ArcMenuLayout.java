@@ -120,26 +120,6 @@ public class ArcMenuLayout extends ViewGroup {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 hideOnTouchUp = true;
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                if (!show) break;
-                if (lastFocusIndex != -1) {
-                    show = false;
-                    AnimatorUtils.openMenu(this, lastFocusIndex, animListener);
-                    if (onClickMenuListener != null) {
-                        View clickedView = getChildAt(lastFocusIndex);
-                        onClickMenuListener.onClickArcMenu(arcMenu, viewForListener, (int) clickedView.getTag());
-                    }
-                } else if (hideOnTouchUp) {
-                    if (showAnimSet != null && showAnimSet.isRunning()) showAnimSet.cancel();
-                    AnimatorUtils.hideMenu(this, touchPoint);
-                    show = false;
-                } else {
-                    hideOnTouchUp = true;
-                }
-                lastFocusIndex = -1;
-                break;
             case MotionEvent.ACTION_MOVE:
                 if (!animFinished) break;
                 tempRect = new Rect();
@@ -160,6 +140,25 @@ public class ArcMenuLayout extends ViewGroup {
                     AnimatorUtils.clearFocusChild(this, lastFocusIndex);
                     lastFocusIndex = -1;
                 }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (!show) break;
+                if (lastFocusIndex != -1) {
+                    show = false;
+                    AnimatorUtils.openMenu(this, lastFocusIndex, animListener);
+                    if (onClickMenuListener != null) {
+                        View clickedView = getChildAt(lastFocusIndex);
+                        onClickMenuListener.onClickArcMenu(arcMenu, viewForListener, (int) clickedView.getTag());
+                    }
+                } else if (hideOnTouchUp) {
+                    if (showAnimSet != null && showAnimSet.isRunning()) showAnimSet.cancel();
+                    AnimatorUtils.hideMenu(this, touchPoint);
+                    show = false;
+                } else {
+                    hideOnTouchUp = true;
+                }
+                lastFocusIndex = -1;
                 break;
         }
 
