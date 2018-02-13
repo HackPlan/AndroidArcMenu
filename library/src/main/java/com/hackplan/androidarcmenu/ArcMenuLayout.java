@@ -2,6 +2,7 @@ package com.hackplan.androidarcmenu;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -93,6 +94,7 @@ public class ArcMenuLayout extends ViewGroup {
         display.getRectSize(mScreenRect);
     }
 
+    private AnimatorSet showAnimSet;
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (!show) return;
@@ -105,7 +107,7 @@ public class ArcMenuLayout extends ViewGroup {
                     (int) (menuPoints.get(i).x + child.getMeasuredWidth() / 2),
                     (int) (menuPoints.get(i).y + child.getMeasuredHeight() / 2));
         }
-        AnimatorUtils.showMenu(this, touchPoint, animListener);
+        showAnimSet = AnimatorUtils.showMenu(this, touchPoint, animListener);
     }
 
     private int lastFocusIndex = -1;
@@ -130,6 +132,7 @@ public class ArcMenuLayout extends ViewGroup {
                         onClickMenuListener.onClickArcMenu(arcMenu, viewForListener, (int) clickedView.getTag());
                     }
                 } else if (hideOnTouchUp) {
+                    if (showAnimSet != null && showAnimSet.isRunning()) showAnimSet.cancel();
                     AnimatorUtils.hideMenu(this, touchPoint);
                     show = false;
                 } else {

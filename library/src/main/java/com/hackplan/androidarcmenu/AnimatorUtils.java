@@ -83,7 +83,7 @@ class AnimatorUtils {
         animSet.start();
     }
 
-    static void showMenu(ViewGroup viewGroup, Point touchPoint, AnimatorListenerAdapter listener) {
+    static AnimatorSet showMenu(ViewGroup viewGroup, Point touchPoint, AnimatorListenerAdapter listener) {
         List<Animator> animList = new ArrayList<>();
 
         for (int i = 0, len = viewGroup.getChildCount(); i < len; i++) {
@@ -96,6 +96,7 @@ class AnimatorUtils {
         animSet.playTogether(animList);
         animSet.addListener(listener);
         animSet.start();
+        return animSet;
     }
 
     static void hideMenu(ViewGroup viewGroup, Point touchPoint) {

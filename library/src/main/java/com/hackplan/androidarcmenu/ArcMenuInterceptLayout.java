@@ -56,7 +56,7 @@ public class ArcMenuInterceptLayout extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (arcMenuLayout.isShow()) {
-            return true;
+            return arcMenuLayout.onTouchEvent(ev);
         }
         return super.onInterceptTouchEvent(ev);
     }
